@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Entrada Productos
+{% endblock title %}
+
+{% block content %}
+{% load static %}
+
+<!-- CSS datatable -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+<div class="container text-center">
+
+
+
+<div class="container text-center ">
+    <h1>{{ titulo }}</h1>
+</div>
+
+
+<div class="container ">
+    {% if request.user.is_authenticated and not request.user.is_superuser %}
+
+    <div class="alert alert-danger text-center" role="alert">
+
+        <h1 class="text-warning">Acceso no autorizado</h1>
+
+    </div>
+
+    {% endif %}
+
+    {% if request.user.is_authenticated and request.user.is_superuser %}
+
+    <div class="container d-flex justify-content-end mb-1">
+        <!-- Agregar entrada -->
+        <a href="/agregarEntrada" class="btn btn-success btn-md mx-2">Agregar entrada producto</a>
+
+        <!-- Volver a la derecha -->
+        <a href="/" class="btn btn-primary float-end mx-2">Volver</a>
+    </div>
+
+    {% if entradas %}
+    <div class="card mb-4">
+        <table id="bodegas-table" class="table align-items-center mb-0">
+            <thead>
+                <tr>
+                    <th class="text-center text-secondary text-xl font-weight-bolder">ID</th>
+                    <th class="text-center text-secondary text-xl font-weight-bolder">Producto entrante</th>
+                    <th class="text-center text-secondary text-xl font-weight-bolder">Cantidad de producto </th>
+                    <th class="text-center text-secondary text-xl font-weight-bolder ps-2">Fecha de entrada </th>
+                    <th class="text-center text-uppercase text-secondary text-xl font-weight-bolder">Descripcion del producto </th>
+                    <th class="text-uppercase text-uppercase text-secondary text-xl font-weight-bolder">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entrada in entradas %}
+                <tr>
+                    <td class="text-l text-center font-weight-bold mb-0">{{ entrada.id }}</td>
+                    <td class="text-l text-center font-weight-bold mb-0">{{ entrada.producto }}</td>
+                    <td class="text-l text-center font-weight-bold mb-0">{{ entrada.cantidadEntrada }}</td>
+                    <td class="text-l text-center font-weight-bold mb-0">{{ entrada.fechaEntrada }}</td>
+                    <td class="text-l text-center font-weight-bold mb-0">{{ entrada.descripcionEntrada }}</td>
+                    <td>
+                        <a href="/entrada/edit/{{ entrada.id }}" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a>
+                        <a href="/entrada/delete/{{ entrada.id }}" class="btn btn-danger"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta entrada?')"><i
+                                class="bi bi-trash3"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center" role="alert">
+        <h1 class="text-warning">No hay entradas registradas</h1>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<!-- JS DataTable -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+<!-- Inicialización JS -->
+<script>
+  $(document).ready(function () {
+    $('#bodegas-table').DataTable();
+  });
+</script>
+{% endif %}
+{% endblock content %}
